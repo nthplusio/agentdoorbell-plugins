@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "agentdoorbell": {
+      "url": "${NOTIFIER_MCP_URL}"
+    }
+  }
+}

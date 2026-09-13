@@ -1,0 +1,13 @@
+{
+  "name": "agentdoorbell-plugins",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate": "node scripts/validate.mjs",
+    "check:live": "node scripts/check-live.mjs",
+    "pack:plugin": "node scripts/package.mjs"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

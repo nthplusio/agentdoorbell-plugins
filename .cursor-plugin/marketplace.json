@@ -1,0 +1,16 @@
+{
+  "name": "agentdoorbell-plugins",
+  "owner": {
+    "name": "NthPlus"
+  },
+  "metadata": {
+    "description": "Agent integrations for Agent Doorbell."
+  },
+  "plugins": [
+    {
+      "name": "agentdoorbell",
+      "source": "plugins/grokbot",
+      "description": "Manage Agent Doorbell Gmail notifiers and handle account-level wake-ups with your Bot."
+    }
+  ]
+}

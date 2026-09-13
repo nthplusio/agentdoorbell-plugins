@@ -1,0 +1,27 @@
+{
+  "name": "agentdoorbell",
+  "version": "0.2.0",
+  "description": "Manage Agent Doorbell Gmail notifiers and handle account-level wake-ups with your Bot.",
+  "mcpServers": "mcp.json",
+  "variables": {
+    "type": "object",
+    "properties": {
+      "NOTIFIER_MCP_URL": {
+        "type": "string",
+        "title": "Notification service MCP URL",
+        "description": "Operator-provided HTTPS endpoint ending in /mcp. Sign in and authorize access through OAuth. No API key is required.",
+        "minLength": 1,
+        "default": "https://agentdoorbell.com/mcp"
+      }
+    },
+    "required": [
+      "NOTIFIER_MCP_URL"
+    ]
+  },
+  "author": {
+    "name": "NthPlus"
+  },
+  "repository": "https://github.com/nthplusio/agentdoorbell-plugins",
+  "homepage": "https://agentdoorbell.com",
+  "skills": "skills/"
+}

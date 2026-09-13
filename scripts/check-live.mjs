@@ -1,0 +1,27 @@
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+const manifest = JSON.parse(await readFile(new URL('../plugins/grokbot/.cursor-plugin/plugin.json', import.meta.url), 'utf8'));
+const endpoint = new URL(process.argv[2] ?? manifest.variables.properties.NOTIFIER_MCP_URL.default);
+assert.equal(endpoint.protocol, 'https:');
+assert.equal(endpoint.pathname, '/mcp');
+assert.ok(!endpoint.username && !endpoint.password && !endpoint.search && !endpoint.hash);
+const get = async url => {
+  const response = await fetch(url, { redirect: 'error', signal: AbortSignal.timeout(10000) });
+  assert.equal(response.status, 200, `Discovery failed: ${new URL(url).pathname}`);
+  return response.json();
+};
+const resource = await get(new URL('/.well-known/oauth-protected-resource/mcp', endpoint));
+assert.equal(resource.resource, endpoint.href);
+for (const scope of ['notifiers:read', 'notifiers:manage']) assert.ok(resource.scopes_supported.includes(scope));
+const issuer = `${endpoint.origin}/api/auth`;
+assert.ok(resource.authorization_servers.includes(issuer));
+const auth = await get(new URL('/.well-known/oauth-authorization-server/api/auth', endpoint));
+assert.equal(auth.issuer, issuer);
+assert.ok(auth.code_challenge_methods_supported.includes('S256'));
+for (const field of ['authorization_endpoint', 'token_endpoint', 'jwks_uri']) assert.equal(new URL(auth[field]).origin, endpoint.origin);
+const denied = await fetch(endpoint, { method: 'POST', headers: {'Content-Type':'application/json', Accept:'application/json, text/event-stream'}, body: JSON.stringify({jsonrpc:'2.0',id:1,method:'tools/list',params:{}}), redirect:'error', signal:AbortSignal.timeout(10000) });
+assert.equal(denied.status, 401, 'Unauthenticated MCP must be denied');
+assert.match(denied.headers.get('www-authenticate') ?? '', /Bearer/i);
+await denied.body?.cancel();
+console.log('PASS: live resource discovery, scopes, OAuth endpoints, S256 PKCE and unauthenticated MCP rejection.');
+console.log('Actual Grokbot OAuth connection and authenticated tool calls still require client acceptance.');
