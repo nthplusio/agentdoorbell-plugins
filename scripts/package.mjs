@@ -7,7 +7,7 @@ await mkdir(join(root, '.local'), { recursive: true });
 const parent = await mkdtemp(join(root, '.local/plugin-package-'));
 const output = join(parent, 'agentdoorbell');
 await mkdir(output);
-for (const path of ['.cursor-plugin/plugin.json', 'mcp.json', 'skills/agentdoorbell/SKILL.md', 'skills/agentdoorbell-wakeup/SKILL.md', 'README.md']) {
+for (const path of ['.cursor-plugin/plugin.json', 'mcp.json', 'assets/agentdoorbell.png', 'skills/agentdoorbell/SKILL.md', 'skills/agentdoorbell-wakeup/SKILL.md', 'README.md']) {
   await mkdir(join(output, path, '..'), { recursive: true });
   await cp(join(root, 'plugins/grokbot', path), join(output, path));
 }

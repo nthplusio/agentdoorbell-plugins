@@ -27,6 +27,9 @@ for (const entry of marketplace.plugins) {
   assert.equal(manifest.repository, 'https://github.com/nthplusio/agentdoorbell-plugins');
   assert.equal(manifest.homepage, 'https://agentdoorbell.com');
   assert.ok((await stat(resolve(base, 'README.md'))).isFile());
+  const logo = await readFile(inside(base, manifest.logo));
+  assert.ok(logo.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10])), 'Logo must be a PNG');
+  assert.ok(logo.length < 300_000, 'Keep the plugin logo lightweight');
   const mcp = await json(inside(base, manifest.mcpServers));
   assert.deepEqual(mcp, { mcpServers: { agentdoorbell: { url: '${NOTIFIER_MCP_URL}' } } });
   assert.equal(manifest.variables.type, 'object');

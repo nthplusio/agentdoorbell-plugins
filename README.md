@@ -1,16 +1,27 @@
 # Agent Doorbell plugins
 
-Agent integrations for [Agent Doorbell](https://agentdoorbell.com), which wakes an agent when new Gmail activity matches a notifier's rule.
+Agent integrations for [Agent Doorbell](https://agentdoorbell.com), which wakes a Bot when new Gmail activity matches a notifier's rule.
 
-| Package | Platform | Status |
+| Package | Platform | Distribution |
 | --- | --- | --- |
-| [Agent Doorbell](plugins/grokbot/README.md) | Grok Bot / Cursor plugin format | Prepared for client testing; marketplace listing and authenticated Grok Bot acceptance pending |
+| [Agent Doorbell](plugins/grokbot/README.md) | Grok Bot / Cursor plugin format | Public marketplace submission in preparation |
 
-The remote MCP endpoint is `https://agentdoorbell.com/mcp`. Sign in through OAuth; no service API key is needed. The hosted service currently requires a pilot invitation.
+**The hosted service is invitation-only.** Installing the plugin does not grant pilot access or authorize Gmail. Sign in at [Agent Doorbell](https://agentdoorbell.com/app) with your invited email, then connect each Gmail account separately.
 
-## Repository layout
+## What the plugin provides
 
-Each platform integration lives in `plugins/<platform>/` with its own manifest, connection configuration, skills, and README. The root `.cursor-plugin/marketplace.json` indexes packages using the Cursor format. Add future platform packages independently and document their actual installation and authentication requirements. Only the package listed above exists today.
+- Browser OAuth connection to the hosted Agent Doorbell MCP service.
+- Six tools to inspect existing notifiers and delivery history, update matching rules, and pause or resume monitoring.
+- A setup skill for connecting a notifier to a saved active webhook routine.
+- A wakeup skill that distinguishes synthetic connectivity probes from real matching Gmail activity.
+
+A webhook routine receives Agent Doorbell signals. Plugin installation does not automatically create a routine or add a native event provider. The receiving Bot needs separate mailbox authorization to inspect mail. A delivered signal means the webhook accepted it; it does not mean the Bot completed its task.
+
+## Install and configure
+
+Public marketplace publication is pending. This repository is the distributable source, not an approved listing. For supported repository-based evaluation, see the [package instructions](plugins/grokbot/README.md). Hosted Grok Bot acceptance must be verified in that client; local CLI or IDE installation does not establish it.
+
+The hosted MCP endpoint is `https://agentdoorbell.com/mcp`. Complete browser OAuth; do not paste access tokens or webhook keys into chat. Create notifiers, authorize Gmail, and configure destination credentials on the website.
 
 ## Develop and validate
 
@@ -22,17 +33,15 @@ npm run check:live
 npm run pack:plugin
 ```
 
-Validation checks package paths, MCP configuration, variables and skill frontmatter. The live check reads public OAuth metadata and verifies unauthenticated MCP requests are rejected. Packaging copies only the Grok Bot package to `.local/`. These checks do not establish authenticated client compatibility.
+Validation checks configuration, package paths, branding, and skill frontmatter. The live check reads public OAuth metadata and verifies unauthenticated MCP requests are rejected. Packaging copies an allowlisted plugin bundle to `.local/`. These checks do not prove authenticated hosted-client acceptance.
 
-See [client acceptance](docs/client-acceptance.md) for the remaining installation and OAuth checks. Public source hosting is separate from marketplace submission and approval. No marketplace listing has been submitted by this repository setup.
+Each platform package lives under `plugins/<platform>/`. The repository marketplace manifest indexes the currently supported Grok Bot package. Additional platform packages can be added independently.
 
-## Scope
+See [client acceptance](docs/client-acceptance.md), [reviewer setup](docs/reviewer-setup.md), and [troubleshooting](docs/troubleshooting.md).
 
-The plugin exposes six notifier-management tools. Creating notifiers, connecting Gmail accounts and configuring webhook destinations happen on the website. Mailbox access for the receiving agent is authorized separately. Webhook acceptance means the destination accepted a signal, not that the agent completed its task.
+## Source and access
 
-This repository contains distributable integrations only. Server implementation, deployment configuration and customer data are maintained separately. No open-source license has been selected; public visibility alone does not grant a general license to reuse the code.
+This repository contains distributable integrations only. Service implementation, deployment configuration, customer data, and private release evidence are maintained separately. No open-source license has been selected; public visibility alone does not grant a general license to reuse the code.
 
-## References
-
-- [Cursor plugin and multi-plugin manifest reference](https://cursor.com/docs/reference/plugins)
+- [Cursor plugin reference](https://cursor.com/docs/reference/plugins)
 - [Grok Bot plugin connections](https://cursor.com/help/grok-bot/connect-plugins)

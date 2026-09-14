@@ -25,3 +25,9 @@ assert.match(denied.headers.get('www-authenticate') ?? '', /Bearer/i);
 await denied.body?.cancel();
 console.log('PASS: live resource discovery, scopes, OAuth endpoints, S256 PKCE and unauthenticated MCP rejection.');
 console.log('Actual Grokbot OAuth connection and authenticated tool calls still require client acceptance.');
+
+const logo = await fetch(new URL('/brand/agentdoorbell.png', endpoint), { redirect: 'error', signal: AbortSignal.timeout(10000) });
+assert.equal(logo.status, 200, 'Public website branding must be deployed');
+assert.match(logo.headers.get('content-type') ?? '', /^image\/png/);
+assert.deepEqual(Buffer.from(await logo.arrayBuffer()), await readFile(new URL('../plugins/grokbot/assets/agentdoorbell.png', import.meta.url)), 'Website and plugin must serve the same brand asset');
+console.log('PASS: public website serves matching plugin branding.');
