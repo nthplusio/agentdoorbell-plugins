@@ -23,5 +23,6 @@
   },
   "repository": "https://github.com/nthplusio/agentdoorbell-plugins",
   "homepage": "https://agentdoorbell.com",
-  "skills": "skills/"
+  "skills": "skills/",
+  "logo": "assets/agentdoorbell.png"
 }
